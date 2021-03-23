@@ -1,20 +1,168 @@
-﻿// client.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
+﻿#define _CRT_SECURE_NO_WARNINGS
+#define _WINSOCK_DEPRECATED_NO_WARNINGS﻿
+//client
 
-#include <iostream>
+#define BUF_SIZE 2048
+#define PORT 6666
+#pragma comment(lib,"ws2_32.lib")//链接ws2_32.lib库文件到此项目中
+
+#include "tcpfunction.h"
+
+
+
+
+using namespace std;
+DWORD WINAPI handlerRequest1(LPVOID lparam);
+DWORD WINAPI handlerRequest2(LPVOID lparam);
+
+//创建socket
+SOCKET sockSer, sockCli;//服务器和客户端的socket
+SOCKADDR_IN addrSer, addrCli;//ip+端口号
+int len = sizeof(SOCKADDR_IN);
+
+
+int ID;
+
+char sendBuf[BUF_SIZE] = {};
+char recvBuf[BUF_SIZE] = {};
+
+//线程
+HANDLE hThread1, hThread2;
+DWORD dwThreadId1, dwThreadId2;
+
+
+//状态码
+int cond;
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	//加载socket库
+	WSADATA wsaData;
+	//MAKEWORD(2.2),成功返回0
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+	{
+		cout << "socket初始化失败" << endl;
+		return 0;
+	}
+
+	//创建Socket
+	//创建一个socket，并将该socket绑定到一个特定的传输层
+	SOCKET sockClient = socket(AF_INET, SOCK_STREAM, 0);//地址类型（ipv4），服务类型（流式套接字）
+
+	//client
+	addrCli.sin_addr.s_addr = inet_addr("192.168.89.240");
+	addrCli.sin_family = AF_INET;
+	int port;
+	cout << "请输入端口号：";
+	cin >> port;
+	addrCli.sin_port = htons(port);
+
+	//初始化server地址
+	addrSer.sin_addr.s_addr = inet_addr("192.168.89.1");
+	addrSer.sin_family = AF_INET;
+	
+	addrSer.sin_port = htons(PORT);
+
+	//绑定
+	//bind(sockSer, (SOCKADDR*)&addrSer, sizeof(SOCKADDR));//强制类型转换，SOCKADDR_IN方便赋值 SOCKADDR方便传输
+
+	////监听
+	//cout << "listening" << endl;
+	//listen(sockSer, 5);
+
+	cout << "Client" << endl;
+
+
+	cout << "connecting" << endl;
+	sockCli = connect(sockClient, (SOCKADDR*)&addrSer, sizeof(SOCKADDR));
+	if (sockCli != SOCKET_ERROR)
+	{
+		cout << "connected" << endl;
+		while (1)
+		{
+			char recvBuf[BUF_SIZE] = {};
+			recv(sockClient, recvBuf, 50, 0);
+			if (recvBuf[0])
+			{
+				cout << recvBuf << endl;
+				ID = recvBuf[10] - 48;
+				break;
+				Sleep(30);
+			}
+		}
+	}
+	//while (1)
+	{
+
+		//if (sockCli != INVALID_SOCKET)
+		while(1)
+		{
+				hThread1 = ::CreateThread(NULL, NULL, handlerRequest1, LPVOID(sockClient), 0, &dwThreadId1);
+
+				hThread2 = ::CreateThread(NULL, NULL, handlerRequest2, LPVOID(sockClient), 0, &dwThreadId2);
+				WaitForSingleObject(hThread1, 200);
+				WaitForSingleObject(hThread2, 200);
+				/*CloseHandle(hThread2);
+				CloseHandle(hThread1);*/
+				//if (cond) break;
+			
+
+
+		}
+	}
+	closesocket(sockClient);
+	WSACleanup();
+	return 0;
+}
+DWORD WINAPI handlerRequest1(LPVOID lparam)
+{
+	while (1)
+	{
+		char sendBuf[BUF_SIZE] = {};
+		char buffer[BUF_SIZE] = {};
+		SOCKET socketClient = (SOCKET)(LPVOID)lparam;
+		//cin >> buffer;
+		cin.getline(buffer, 2048, '\n');
+		if (buffer[0])
+		{
+			sendBuf[0] = ID + 48;
+			strcat(sendBuf, buffer);
+			send(socketClient, sendBuf, 2048, 0);
+
+			msg_form m = string_to_msg(sendBuf);
+			if (!strcmp(m.msg, "quit") || !strcmp(buffer, "quit"))
+				//recv(socketClient, recvBuf, 50, 0);
+			{
+				cond = 1;
+				
+			}
+			else return 0;
+		}
+		Sleep(200);
+	}
+	return 0;
 }
 
-// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
-// 调试程序: F5 或调试 >“开始调试”菜单
+DWORD WINAPI handlerRequest2(LPVOID lparam)
+{
+	while (1)
+	{
+		char recvBuf[BUF_SIZE] = {};
+		SOCKET socketClient = (SOCKET)(LPVOID)lparam;
+		//send(socketClient, sendBuf, 2048, 0);
+		recv(socketClient, recvBuf, 2048, 0);
+		if (recvBuf[0])
+		{
+			msg_form m = string_to_msg(recvBuf);
+			/*if (!strcmp(m.msg, "quit")||!strcmp(recvBuf,"quit"))
+			{
+				cond = 1;
+			}*/
+			cout << m.from_name << ": " << m.msg << endl;
 
-// 入门使用技巧: 
-//   1. 使用解决方案资源管理器窗口添加/管理文件
-//   2. 使用团队资源管理器窗口连接到源代码管理
-//   3. 使用输出窗口查看生成输出和其他消息
-//   4. 使用错误列表窗口查看错误
-//   5. 转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
-//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件
+		}
+		Sleep(200);
+	}
+	//closesocket(socketClient);
+	return 0;
+}

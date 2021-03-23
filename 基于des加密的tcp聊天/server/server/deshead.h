@@ -3,7 +3,10 @@
 #include<fstream>
 #include<iomanip>
 #include<bitset>
+#include "testdata.h"
 using namespace std;
+#ifndef DES
+#define DES
 typedef unsigned char u_char;
 
 class tuple_
@@ -47,3 +50,6 @@ void convertP(u_char a[4], u_char b[4]);
 //轮加密
 void round(u_char m[8], u_char key_final[16][6], u_char afterIP_1[8]);
 
+//void funcEn(des_test_case m);//加密过程
+//void funcDe(des_test_case c);
+#endif;

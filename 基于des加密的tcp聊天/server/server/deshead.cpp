@@ -2,6 +2,7 @@
 //加密和解密只是密钥的使用顺序相反，其余相同
 #include"deshead.h"
 #include"data.h"
+#include "testdata.h"
 #include<stdio.h>
 //将字节索引该为字索引
 int u_char2bit(tuple_ a)
@@ -235,32 +236,37 @@ void convertP(u_char a[4], u_char b[4])
 	for (int i = 0; i < 32; i++)
 		convert(a, b, i, P);
 }
+int test(u_char a[8], u_char b[8])//对比两个数组的元素是否相同
+{
+	int flag = 1;
+	for (int i = 0; i < 8; i++)
+		if (a[i] != b[i])
+		{
+			flag = 0;
+			break;
+		}
+	return flag;
+}
 
-// int main()
-// {
-// 	//u_char a = 0;
-// 	//write(a, 1, 1);
-// 	//cout << "0x" <<hex<<(int)a<< endl;
-// //   a = 254;
-// 	//cout<<getbit(a, 1)<<endl;
-// 	//cout<<getbit(a, 8)<<endl;
-
-// 	/*u_char a[] = { 128,0,0,0,0,0,0,0,0 };
-// 	u_char b[8] = {};
-// 	u_char c[8] = {};
-// 	convIP(a, b);
-// 	convIP_1(b, c);*/
-
-// 	//u_char key[8] = { 0x10, 0x31, 0x6E, 0x02, 0x8C, 0x8F, 0x3B, 0x4A };
-// 	//u_char key_final[16][6];
-// 	//getkeys(key,key_final);
-
-// 	/*u_char a[] = { 0x10, 0x31, 0x6E, 0x02 };
-// 	u_char b[6] = {};
-// 	convertE(a, b);*/
-// 	u_char a[] = { 0x10, 0x31, 0x6E, 0x02, 0x8C, 0x8F };
-// 	u_char b[4] = {};
-// 	convertS(a, b);
-	
-// 	int i = 0;
-// }
+//void funcEn(des_test_case m)//加密过程
+//{
+//	u_char key_final[16][6] = {};
+//	//生成密钥
+//	getkeys(m.key, key_final);
+//	u_char cipher[8] = {};
+//	round(m.txt, key_final, cipher);
+//	//cout << test(m.out, cipher) << endl;
+//}
+//
+//void funcDe(des_test_case c)
+//{
+//	u_char key_final_[16][6] = {};
+//	u_char key_final[16][6] = {};
+//	getkeys(c.key, key_final_);
+//	for (int i = 0; i < 16; i++)
+//		for (int j = 0; j < 6; j++)
+//			key_final[15 - i][j] = key_final_[i][j];
+//	u_char m[8] = {};
+//	round(c.txt, key_final, m);
+//	//cout << test(c.out, m) << endl;
+//}

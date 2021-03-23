@@ -236,31 +236,25 @@ void convertP(u_char a[4], u_char b[4])
 		convert(a, b, i, P);
 }
 
-// int main()
-// {
-// 	//u_char a = 0;
-// 	//write(a, 1, 1);
-// 	//cout << "0x" <<hex<<(int)a<< endl;
-// //   a = 254;
-// 	//cout<<getbit(a, 1)<<endl;
-// 	//cout<<getbit(a, 8)<<endl;
+void funcEn(des_test_case m)//加密过程
+{
+	u_char key_final[16][6] = {};
+	//生成密钥
+	getkeys(m.key, key_final);
+	u_char cipher[8] = {};
+	round(m.txt, key_final, cipher);
+	//cout << test(m.out, cipher) << endl;
+}
 
-// 	/*u_char a[] = { 128,0,0,0,0,0,0,0,0 };
-// 	u_char b[8] = {};
-// 	u_char c[8] = {};
-// 	convIP(a, b);
-// 	convIP_1(b, c);*/
-
-// 	//u_char key[8] = { 0x10, 0x31, 0x6E, 0x02, 0x8C, 0x8F, 0x3B, 0x4A };
-// 	//u_char key_final[16][6];
-// 	//getkeys(key,key_final);
-
-// 	/*u_char a[] = { 0x10, 0x31, 0x6E, 0x02 };
-// 	u_char b[6] = {};
-// 	convertE(a, b);*/
-// 	u_char a[] = { 0x10, 0x31, 0x6E, 0x02, 0x8C, 0x8F };
-// 	u_char b[4] = {};
-// 	convertS(a, b);
-	
-// 	int i = 0;
-// }
+void funcDe(des_test_case c)
+{
+	u_char key_final_[16][6] = {};
+	u_char key_final[16][6] = {};
+	getkeys(c.key, key_final_);
+	for (int i = 0; i < 16; i++)
+		for (int j = 0; j < 6; j++)
+			key_final[15 - i][j] = key_final_[i][j];
+	u_char m[8] = {};
+	round(c.txt, key_final, m);
+	//cout << test(c.out, m) << endl;
+}
