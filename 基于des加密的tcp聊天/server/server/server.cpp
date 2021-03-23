@@ -1,20 +1,56 @@
-﻿// server.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
+﻿#include"deshead.h"
+#include"testdata.h"
 
-#include <iostream>
+int test(u_char a[8], u_char b[8])//对比两个数组的元素是否相同
+{
+	int flag = 1;
+	for (int i = 0; i < 8; i++)
+		if (a[i] != b[i])
+		{
+			flag = 0;
+			break;
+		}
+	return flag;
+}
+
+void funcEn(des_test_case m)//加密过程
+{
+	u_char key_final[16][6] = {};
+	//生成密钥
+	getkeys(m.key, key_final);
+	u_char cipher[8] = {};
+	round(m.txt, key_final, cipher);
+	cout << test(m.out, cipher) << endl;
+}
+
+void funcDe(des_test_case c)
+{
+	u_char key_final_[16][6] = {};
+	u_char key_final[16][6] = {};
+	getkeys(c.key, key_final_);
+	for (int i = 0; i < 16; i++)
+		for (int j = 0; j < 6; j++)
+			key_final[15 - i][j] = key_final_[i][j];
+	u_char m[8] = {};
+	round(c.txt, key_final, m);
+	cout << test(c.out, m) << endl;
+}
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	for (int i = 0; i < 20; i++)
+	{
+		if (cases[i].mode == 1)
+		{
+			cout << "加密" << cases[i].num << endl;
+			funcEn(cases[i]);
+			cout << "=====================" << endl;
+		}
+		else
+		{
+			cout << "解密" << cases[i].num << endl;
+			funcDe(cases[i]);
+			cout << "=====================" << endl;
+		}
+	}
 }
-
-// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
-// 调试程序: F5 或调试 >“开始调试”菜单
-
-// 入门使用技巧: 
-//   1. 使用解决方案资源管理器窗口添加/管理文件
-//   2. 使用团队资源管理器窗口连接到源代码管理
-//   3. 使用输出窗口查看生成输出和其他消息
-//   4. 使用错误列表窗口查看错误
-//   5. 转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
-//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件

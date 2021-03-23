@@ -4,6 +4,7 @@
 #include<iomanip>
 #include<bitset>
 using namespace std;
+typedef unsigned char u_char;
 
 class tuple_
 {
