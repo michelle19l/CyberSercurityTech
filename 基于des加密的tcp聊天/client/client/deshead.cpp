@@ -2,6 +2,7 @@
 //加密和解密只是密钥的使用顺序相反，其余相同
 #include"deshead.h"
 #include"data.h"
+#include "testdata.h"
 #include<stdio.h>
 //将字节索引该为字索引
 int u_char2bit(tuple_ a)
@@ -89,16 +90,16 @@ void getkeys(u_char key[8], u_char key_final[16][6])
 		for (int j = 0; j < MOV[i]; j++)
 		{
 			left_mov.set(28 - MOV[i] + j, key_round[i][j]);
-			left_mov.set(56- MOV[i] + j, key_round[i][28 + j]);
+			left_mov.set(56 - MOV[i] + j, key_round[i][28 + j]);
 		}
-		key_round[i+1] = left_mov;
+		key_round[i + 1] = left_mov;
 	}
 
 	//PC_2置换
-	for(int i=0;i<16;i++)
+	for (int i = 0; i < 16; i++)
 		for (int j = 0; j < 48; j++)
 		{
-			write(key_final[i][j/8], j%8, key_round[i + 1][PC_2[j] - 1]);
+			write(key_final[i][j / 8], j % 8, key_round[i + 1][PC_2[j] - 1]);
 		}
 }
 
@@ -113,9 +114,9 @@ void round(u_char m_[8], u_char key_final[16][6], u_char afterIP_1[8])
 	for (int i = 0; i < 4; i++)
 	{
 		left[i] = m[i];
-		right[i] = m[i+4];
+		right[i] = m[i + 4];
 	}
- 	for (int i = 0; i < 16; i++)//十六轮加密
+	for (int i = 0; i < 16; i++)//十六轮加密
 	{
 		////cout << i<<": left ";
 		//cout << "{";
@@ -128,7 +129,7 @@ void round(u_char m_[8], u_char key_final[16][6], u_char afterIP_1[8])
 
 		u_char afterE[6] = {};//扩展置换后的结果
 		//扩展置换E
-		convertE(right,afterE);
+		convertE(right, afterE);
 		//与密钥进行逐bit异或
 		u_char afterXOR[6] = {};
 		xor_(key_final[i], afterE, afterXOR);
@@ -190,7 +191,7 @@ void convertE(u_char a[4], u_char b[6])
 //48比特异或
 void xor_(u_char a[6], u_char b[6], u_char c[6])
 {
-	for(int i=0;i<6;i++)
+	for (int i = 0; i < 6; i++)
 		for (int j = 0; j < 8; j++)
 		{
 			int temp = getbit(a[i], j) ^ getbit(b[i], j);
@@ -198,7 +199,7 @@ void xor_(u_char a[6], u_char b[6], u_char c[6])
 		}
 }
 //S盒
-void convertS(u_char a[6],u_char b[4])
+void convertS(u_char a[6], u_char b[4])
 {
 	bitset<48> a_;
 	u_char b_[8];
@@ -219,13 +220,13 @@ void convertS(u_char a[6],u_char b[4])
 		{
 			line_index = line_index * 2 + a_[i * 6 + j];
 		}
-		b_[i] = S[i][box_index*16+line_index];
+		b_[i] = S[i][box_index * 16 + line_index];
 	}
-	for(int i=0;i<4;i++)
+	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 		{
-			write(b[i], j, getbit(b_[2*i],4+j));
-			write(b[i], j+4, getbit(b_[2*i+1],4+j));
+			write(b[i], j, getbit(b_[2 * i], 4 + j));
+			write(b[i], j + 4, getbit(b_[2 * i + 1], 4 + j));
 		}
 	int i = 0;
 }
@@ -235,26 +236,37 @@ void convertP(u_char a[4], u_char b[4])
 	for (int i = 0; i < 32; i++)
 		convert(a, b, i, P);
 }
-
-void funcEn(des_test_case m)//加密过程
+int test(u_char a[8], u_char b[8])//对比两个数组的元素是否相同
 {
-	u_char key_final[16][6] = {};
-	//生成密钥
-	getkeys(m.key, key_final);
-	u_char cipher[8] = {};
-	round(m.txt, key_final, cipher);
-	//cout << test(m.out, cipher) << endl;
+	int flag = 1;
+	for (int i = 0; i < 8; i++)
+		if (a[i] != b[i])
+		{
+			flag = 0;
+			break;
+		}
+	return flag;
 }
 
-void funcDe(des_test_case c)
-{
-	u_char key_final_[16][6] = {};
-	u_char key_final[16][6] = {};
-	getkeys(c.key, key_final_);
-	for (int i = 0; i < 16; i++)
-		for (int j = 0; j < 6; j++)
-			key_final[15 - i][j] = key_final_[i][j];
-	u_char m[8] = {};
-	round(c.txt, key_final, m);
-	//cout << test(c.out, m) << endl;
-}
+//void funcEn(des_test_case m)//加密过程
+//{
+//	u_char key_final[16][6] = {};
+//	//生成密钥
+//	getkeys(m.key, key_final);
+//	u_char cipher[8] = {};
+//	round(m.txt, key_final, cipher);
+//	//cout << test(m.out, cipher) << endl;
+//}
+//
+//void funcDe(des_test_case c)
+//{
+//	u_char key_final_[16][6] = {};
+//	u_char key_final[16][6] = {};
+//	getkeys(c.key, key_final_);
+//	for (int i = 0; i < 16; i++)
+//		for (int j = 0; j < 6; j++)
+//			key_final[15 - i][j] = key_final_[i][j];
+//	u_char m[8] = {};
+//	round(c.txt, key_final, m);
+//	//cout << test(c.out, m) << endl;
+//}
