@@ -52,3 +52,13 @@ msg_form string_to_msg(char a[])//将字符串恢复成类
 
 	return msg_;
 }
+
+string initial_key()//server生成64位初始密钥
+{
+	string key="";
+	for (int i = 0; i < 8; i++)
+	{
+		key += rand() % 128;
+	}
+	return key;
+}

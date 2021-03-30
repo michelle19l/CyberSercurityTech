@@ -49,6 +49,15 @@ int main()
 	//创建一个socket，并将该socket绑定到一个特定的传输层
 	sockSer = socket(AF_INET, SOCK_STREAM, 0);//地址类型（ipv4），服务类型（流式套接字）
 
+	// 设置超时
+	struct timeval timeout;
+	timeout.tv_sec = 1;//秒
+	timeout.tv_usec = 0;//微秒
+	if (setsockopt(sockSer, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout)) == -1) {
+		cout << "setsockopt failed:";
+	}
+
+
 	//初始化地址
 	addrSer.sin_addr.s_addr = inet_addr("192.168.89.1");
 	addrSer.sin_family = AF_INET;
@@ -61,8 +70,7 @@ int main()
 
 	//监听
 	cout << "listening" << endl;
-	u_char *key=new u_char[8]; 
-	//getkey(key);
+	string key = initial_key();
 	for (int i = 0; i < CLIENTNUM; i++)
 	{
 		listen(sockSer, 5);
@@ -70,15 +78,13 @@ int main()
 		if (sockConn[i] != INVALID_SOCKET)
 		{
 			cond++;//人数加一
-			char buf[20] = "你的id是：";
-			buf[10] = 48 + i;//简化，最多九个人
-			for (int i = 11; i < 19; i++)
-			{
-				buf[i] = key[i - 11];
-			}
-			buf[19] = 0;
-			send(sockConn[i], buf, 50, 0);
-			cout << CLIENTNUM << " clients have connected" << endl;
+			string buf = "你的id是：";
+			
+			buf+= 48 + i;//简化，最多九个人
+			
+			send(sockConn[i], buf.data(), 50, 0);
+			send(sockConn[i], key.data(), 50, 0);
+			cout << "clients "<<i<<" have connected" << endl;
 		}
 
 	}
