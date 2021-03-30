@@ -6,11 +6,12 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include <WinSock2.h>//windows socket 编程头文件
+#include "deshead.h"
 using namespace std;
 
 #define BUF_SIZE 2048
 #define PORT 6666
-#define CLIENTNUM 4
+#define CLIENTNUM 1
 
 
 

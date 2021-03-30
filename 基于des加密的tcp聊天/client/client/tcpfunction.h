@@ -7,8 +7,9 @@
 #include<stdio.h>
 #include <WinSock2.h>//windows socket 编程头文件
 #include<string.h>
-#include<cstring>
-#include<string>
+#include "deshead.h"
+using namespace std;
+
 
 #define BUF_SIZE 2048
 #define PORT 6666
@@ -47,8 +48,8 @@ char* msg_to_string(msg_form a);//用字符串存储报文
 msg_form string_to_msg(char a[]);//将字符串恢复成类
 
 //void funcEn(des_test_case m)//加密过程
-char* msg_en(char*, u_char*);
-char* msg_de(char*, u_char*);
+char* msg_en(char*, u_char[16][6]);
+char* msg_de(char*, u_char[16][6]);
 
 
 

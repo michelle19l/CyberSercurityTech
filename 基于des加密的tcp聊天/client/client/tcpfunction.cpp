@@ -1,24 +1,24 @@
 #include "tcpfunction.h"
-#include "deshead.h"
 
 
 
-char* msg_en(char* a, u_char* key) {
-	u_char key_final[16][6] = {};
-	//生成密钥
-	getkeys(key, key_final);
-	u_char cipher[8] = {};
+
+char* msg_en(char* a, u_char key_final[16][6]) {
+	//u_char key_final[16][6] = {};
+	////生成密钥
+	//getkeys(key, key_final);
+	u_char cipher[9] = {};
 	round((u_char*)a, key_final, cipher);
 	return (char*)cipher;
 }
-char* msg_de(char* a, u_char* key) {
-	u_char key_final_[16][6] = {};
-	u_char key_final[16][6] = {};
-	getkeys(key, key_final_);
-	for (int i = 0; i < 16; i++)
-		for (int j = 0; j < 6; j++)
-			key_final[15 - i][j] = key_final_[i][j];
-	u_char m[8] = {};
+char* msg_de(char* a, u_char key_final[16][6]) {
+	//u_char key_final_[16][6] = {};
+	//u_char key_final[16][6] = {};
+	//getkeys(key, key_final_);
+	//for (int i = 0; i < 16; i++)
+	//	for (int j = 0; j < 6; j++)
+	//		key_final[15 - i][j] = key_final_[i][j];
+	u_char m[9] = {};
 	round((u_char*)a, key_final, m);
 	return (char*)m;
 }

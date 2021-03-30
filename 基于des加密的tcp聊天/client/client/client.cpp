@@ -30,7 +30,8 @@ char recvBuf[BUF_SIZE] = {};
 HANDLE hThread1, hThread2;
 DWORD dwThreadId1, dwThreadId2;
 
-
+u_char key_final[16][6] = {};
+u_char key_final_[16][6] = {};//解密
 //状态码
 int cond;
 
@@ -86,6 +87,8 @@ int main()
 
 	cout << "connecting" << endl;
 	sockCli = connect(sockClient, (SOCKADDR*)&addrSer, sizeof(SOCKADDR));
+	
+	
 	if (sockCli != SOCKET_ERROR)
 	{
 		cout << "connected" << endl;
@@ -98,9 +101,13 @@ int main()
 			memset(recvBuf, 0, sizeof(recvBuf));
 			recv(sockClient, recvBuf, 50, 0);
 			cout << "密钥： ";
+			//生成密钥
+			getkeys((u_char*)recvBuf, key_final);
+			for (int i = 0; i < 16; i++)
+				for (int j = 0; j < 6; j++)
+					key_final_[15 - i][j] = key_final[i][j];
 			for (int i = 0; i < 8; i++)
 				printf("%02X ", recvBuf[i]);
-				//cout << setw(2) << setfill('0')<<hex << (int)recvBuf[i]<<" ";
 			cout << endl;
 			break;
 			Sleep(30);
@@ -140,18 +147,24 @@ DWORD WINAPI handlerRequest1(LPVOID lparam)
 		cin.getline(buffer, 2048, '\n');
 		if (buffer[0])
 		{
+			sendBuf[1] = buffer[0];
+			int i;
+			for (i = 1; buffer[i] != 0; i++)
+				buffer[i - 1] = buffer[i];
+			buffer[i - 1] = 0;
+			char* buf = msg_en(buffer, key_final);
 			sendBuf[0] = ID + 48;
-			strcat(sendBuf, buffer);
+			strcat(sendBuf, buf);
 			send(socketClient, sendBuf, 2048, 0);
 
-			msg_form m = string_to_msg(sendBuf);
-			if (!strcmp(m.msg, "quit") || !strcmp(buffer, "quit"))
-				//recv(socketClient, recvBuf, 50, 0);
-			{
-				cond = 1;
-				
-			}
-			else return 0;
+			//msg_form m = string_to_msg(sendBuf);
+			//if (!strcmp(m.msg, "quit") || !strcmp(buffer, "quit"))
+			//	//recv(socketClient, recvBuf, 50, 0);
+			//{
+			//	cond = 1;
+			//	
+			//}
+			//else return 0;
 		}
 		Sleep(200);
 	}
@@ -168,12 +181,19 @@ DWORD WINAPI handlerRequest2(LPVOID lparam)
 		recv(socketClient, recvBuf, 2048, 0);
 		if (recvBuf[0])
 		{
-			msg_form m = string_to_msg(recvBuf);
+			cout << recvBuf[0] << ": ";
+			int i;
+			for (i = 1; recvBuf[i] != 0; i++)
+				recvBuf[i - 1] = recvBuf[i];
+			recvBuf[i - 1] = 0;
+			char* buf = msg_de(recvBuf, key_final_);
+			cout << buf << endl;
+			//msg_form m = string_to_msg(recvBuf);
 			/*if (!strcmp(m.msg, "quit")||!strcmp(recvBuf,"quit"))
 			{
 				cond = 1;
 			}*/
-			cout << m.from_name << ": " << m.msg << endl;
+			//cout << m.from_name << ": " << m.msg << endl;
 
 		}
 		Sleep(200);
