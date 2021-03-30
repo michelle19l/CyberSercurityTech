@@ -59,7 +59,7 @@ int main()
 
 
 	//初始化地址
-	addrSer.sin_addr.s_addr = inet_addr("192.168.89.1");
+	addrSer.sin_addr.s_addr = inet_addr("127.0.0.1");
 	addrSer.sin_family = AF_INET;
 	addrSer.sin_port = htons(PORT);
 
@@ -103,7 +103,7 @@ int main()
 			if (!cond)break;
 		}
 	}
-
+	cout << "all clinets closed up" << endl;
 	closesocket(sockSer);
 	WSACleanup();
 	return 0;

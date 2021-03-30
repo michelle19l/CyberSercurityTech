@@ -61,7 +61,7 @@ int main()
 
 
 	//client
-	addrCli.sin_addr.s_addr = inet_addr("192.168.89.240");
+	addrCli.sin_addr.s_addr = inet_addr("127.0.0.1");
 	addrCli.sin_family = AF_INET;
 	int port;
 	cout << "请输入端口号：";
@@ -70,7 +70,7 @@ int main()
 
 
 	//初始化server地址
-	addrSer.sin_addr.s_addr = inet_addr("192.168.89.1");
+	addrSer.sin_addr.s_addr = inet_addr("127.0.0.1");
 	addrSer.sin_family = AF_INET;
 	
 	addrSer.sin_port = htons(PORT);
