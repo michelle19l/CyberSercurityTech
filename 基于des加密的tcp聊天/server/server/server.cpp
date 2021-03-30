@@ -103,25 +103,7 @@ int main()
 			if (!cond)break;
 		}
 	}
-	////while (1)
-	//{
-	//	//if (sockConn != INVALID_SOCKET)
-	//	{
-	//		while (1)
-	//		{
-	//			hThread1 = ::CreateThread(NULL, NULL, handlerRequest1, LPVOID(sockConn), 0, &dwThreadId1);
-	//			hThread2 = ::CreateThread(NULL, NULL, handlerRequest2, LPVOID(sockConn), 0, &dwThreadId2);
-	//			WaitForSingleObject(hThread1, 20);
-	//			WaitForSingleObject(hThread2, 20);
-	//			CloseHandle(hThread2);
-	//			CloseHandle(hThread1);
-	//			if (cond)break;
 
-	//		}
-
-	//	}
-
-	//}
 	closesocket(sockSer);
 	WSACleanup();
 	return 0;
@@ -141,7 +123,7 @@ DWORD WINAPI handlerRequest(LPVOID lparam)
 		cout << recvBuf << endl;
 		msg_form m = string_to_msg(recvBuf);
 		int id = m.to_name - 48;
-		cout << id << endl;
+		//cout << id << endl;
 		send(sockConn[id], recvBuf, 50, 0);
 		if (!strcmp(m.msg, "quit"))
 		{

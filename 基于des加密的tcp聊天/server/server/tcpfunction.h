@@ -11,7 +11,8 @@ using namespace std;
 
 #define BUF_SIZE 2048
 #define PORT 6666
-#define CLIENTNUM 1
+#define CLIENTNUM 2
+
 
 
 

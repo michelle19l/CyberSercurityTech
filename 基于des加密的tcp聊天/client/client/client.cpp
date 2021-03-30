@@ -126,7 +126,7 @@ int main()
 				WaitForSingleObject(hThread2, 200);
 				/*CloseHandle(hThread2);
 				CloseHandle(hThread1);*/
-				//if (cond) break;
+				if (cond) break;
 			
 
 
@@ -147,13 +147,25 @@ DWORD WINAPI handlerRequest1(LPVOID lparam)
 		cin.getline(buffer, 2048, '\n');
 		if (buffer[0])
 		{
+			sendBuf[0] = ID + 48;
+			msg_form m = string_to_msg(sendBuf);
+			if (!strcmp(m.msg, "quit") || !strcmp(buffer, "quit"))
+			{
+				sendBuf[1] = ID + 48;
+				strcat(sendBuf, buffer);
+				send(socketClient, sendBuf, 2048, 0);
+				cond = 1;
+
+				return 0;
+			}
 			sendBuf[1] = buffer[0];
 			int i;
 			for (i = 1; buffer[i] != 0; i++)
 				buffer[i - 1] = buffer[i];
 			buffer[i - 1] = 0;
-			char* buf = msg_en(buffer, key_final);
-			sendBuf[0] = ID + 48;
+			char buf[BUF_SIZE] = {};
+			msg_en(buffer, key_final,buf);
+			
 			strcat(sendBuf, buf);
 			send(socketClient, sendBuf, 2048, 0);
 
@@ -183,11 +195,13 @@ DWORD WINAPI handlerRequest2(LPVOID lparam)
 		{
 			cout << recvBuf[0] << ": ";
 			int i;
-			for (i = 1; recvBuf[i] != 0; i++)
-				recvBuf[i - 1] = recvBuf[i];
-			recvBuf[i - 1] = 0;
-			char* buf = msg_de(recvBuf, key_final_);
+			for (i = 2; recvBuf[i] != 0; i++)
+				recvBuf[i - 2] = recvBuf[i];
+			recvBuf[i - 2] = 0;
+			char buf[BUF_SIZE] = {};
+			msg_de(recvBuf, key_final_, buf);
 			cout << buf << endl;
+			int k = 1;
 			//msg_form m = string_to_msg(recvBuf);
 			/*if (!strcmp(m.msg, "quit")||!strcmp(recvBuf,"quit"))
 			{
