@@ -79,6 +79,14 @@ unsigned int smallprime[5000];
 //	temp_.m.print();
 //}
 
+
+void big::numtostring(char* buf)
+{
+	for (int i = 0; i < 512; i++)
+		buf[i] = this->num[i];
+}
+
+
 prime::prime(string a)
 {
 	number.set(a);
@@ -94,6 +102,11 @@ void big::copy(big a)
 		num[i] = a.num[i];
 }
 
+void big::stringtonum(char* buf)
+{
+	for (int i = 0; i < 512; i++)
+		this->num[i] = (int)buf[i];
+}
 
 
 big::big() {

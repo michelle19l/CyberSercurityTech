@@ -27,6 +27,7 @@ class big//十六进制
 public:
 	int num[512];
 	big();
+	big(char*);
 	void copy(big);
 	void print();
 	void set(unsigned int a);
@@ -35,6 +36,8 @@ public:
 	void set(string a, int x);
 	void set(unsigned long long a);
 	int getbit(int i);//第2^i位
+	void numtostring(char*);
+	void stringtonum(char*);
 };
 big add(big a, big b);
 big sub(big a, big b);

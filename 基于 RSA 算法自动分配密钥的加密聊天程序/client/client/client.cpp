@@ -7,6 +7,7 @@
 #pragma comment(lib,"ws2_32.lib")//链接ws2_32.lib库文件到此项目中
 
 #include "tcpfunction.h"
+#include "RSA.h"
 
 
 
@@ -34,7 +35,7 @@ u_char key_final[16][6] = {};
 u_char key_final_[16][6] = {};//解密
 //状态码
 int cond;
-
+big n, e;
 int main()
 {
 	//加载socket库
@@ -95,14 +96,35 @@ int main()
 		while (1)
 		{
 			char recvBuf[BUF_SIZE] = {};
+			
 			recv(sockClient, recvBuf, 50, 0);
 			cout << recvBuf << endl;
 			ID = recvBuf[10] - 48;
+			//接收n
 			memset(recvBuf, 0, sizeof(recvBuf));
-			recv(sockClient, recvBuf, 50, 0);
-			cout << "密钥： ";
+			recv(sockClient, recvBuf, 1024, 0);
+			n.stringtonum(recvBuf);
+			//接收e
+			memset(recvBuf, 0, sizeof(recvBuf));
+			recv(sockClient, recvBuf, 1024, 0);
+			e.stringtonum(recvBuf);
+			cout << "RSA公钥： ";
+			cout << "n= "; n.print();
+			cout << "e= "; e.print();
+			string key;
+			if (ID == 0)
+			{
+				key = initial_key();
+				send(sockClient, key.data(), 50, 0);
+			}
+			else
+			{
+				memset(recvBuf, 0, sizeof(recvBuf));
+				recv(sockClient, recvBuf, 50, 0);
+				key = recvBuf;
+			}
 			//生成密钥
-			getkeys((u_char*)recvBuf, key_final);
+			getkeys((u_char*)key.data(), key_final);
 			for (int i = 0; i < 16; i++)
 				for (int j = 0; j < 6; j++)
 					key_final_[15 - i][j] = key_final[i][j];

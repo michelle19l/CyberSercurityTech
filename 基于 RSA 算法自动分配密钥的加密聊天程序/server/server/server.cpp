@@ -74,7 +74,18 @@ int main()
 
 	//监听
 	cout << "listening" << endl;
-	string key = initial_key();
+	//string key = initial_key();
+	cout << "开始生成密钥" << endl;
+	big e;
+	e.set(0x10001);
+	prime p("d0af256c8c72facbc0051054813505a340f899bcb05f4dfb83f2a9a4d14eabd312daa80c24bd772b37fe7cf4a39b8803c37a905cab66365b1721ca4400005a49");
+	cout << "p= "; p.number.print();
+	prime q("a698494d2c26ca02ebf5284584c6224ab88e46bd27242f12dfec9cb577df385a3878a22d32aa06224e724f25ce93e06a96691b9d56d08f321733ff9500005d11");
+	cout << "q= "; q.number.print();
+	
+	RSA_ rsa(p.number, q.number, e);
+	cout << "n= "; rsa.n.print();
+	cout << "密钥对已生成" << endl;
 	for (int i = 0; i < CLIENTNUM; i++)
 	{
 		listen(sockSer, 5);
@@ -83,12 +94,20 @@ int main()
 		{
 			cond++;//人数加一
 			string buf = "你的id是：";
-			
-			buf+= 48 + i;//简化，最多九个人
-			
+
+			buf += 48 + i;//简化，最多九个人
+
 			send(sockConn[i], buf.data(), 50, 0);
-			send(sockConn[i], key.data(), 50, 0);
-			cout << "clients "<<i<<" have connected" << endl;
+			//send(sockConn[i], key.data(), 50, 0);
+			cout << "clients " << i << " have connected" << endl;
+
+			char buf_[1024] = {};
+			rsa.n.numtostring(buf_);
+			send(sockConn[i], buf_,1024, 0);//发送n
+			memset(buf_,1024, 0);
+			e.numtostring(buf_);
+			send(sockConn[i], buf_, 512, 0);
+			
 		}
 
 	}
