@@ -3,25 +3,68 @@
 
 
 
-char* msg_en(char* a, u_char* key) {
-	u_char key_final[16][6] = {};
-	//生成密钥
-	getkeys(key, key_final);
-	u_char cipher[8] = {};
-	round((u_char*)a, key_final, cipher);
-	return (char*)cipher;
+char* msg_en(char* a, u_char key_final[16][6], char* cipher) {
+	//u_char key_final[16][6] = {};
+	////生成密钥
+	//getkeys(key, key_final);
+	//cipher=new char[9];
+	int len = strlen(a);
+	u_char temp[8], tempcipher[8];
+	int index = 0;
+	memset(cipher, 0, BUF_SIZE);
+	for (int i = 0; i < len; i += 8)
+	{
+		memset(temp, 0, sizeof(temp));
+		memset(tempcipher, 0, sizeof(tempcipher));
+		for (int j = 0; j < 8; j++)
+		{
+			temp[j] = (u_char)a[i + j];
+		}
+		round(temp, key_final, tempcipher);
+		for (int j = 0; j < 8; j++)
+		{
+			cipher[index++] = tempcipher[j];
+		}
+	}
+	cout << "encoded: ";
+	for (int i = 0; i < sizeof(cipher); i++)
+	{
+		cout << hex << (int)cipher[i] << " ";
+	}
+	cout << endl;
+	return cipher;
 }
-char* msg_de(char* a, u_char* key) {
-	u_char key_final_[16][6] = {};
-	u_char key_final[16][6] = {};
-	getkeys(key, key_final_);
-	for (int i = 0; i < 16; i++)
-		for (int j = 0; j < 6; j++)
-			key_final[15 - i][j] = key_final_[i][j];
-	u_char m[8] = {};
-	round((u_char*)a, key_final, m);
-	return (char*)m;
+char* msg_de(char* a, u_char key_final[16][6], char* m) {
+
+
+	int len = strlen(a);
+	u_char temp[8], tempm[8];
+	int index = 0;
+	memset(m, 0, BUF_SIZE);
+	for (int i = 0; i < BUF_SIZE; i += 8)
+	{
+		memset(temp, 0, sizeof(temp));
+		memset(tempm, 0, sizeof(tempm));
+		for (int j = 0; j < 8; j++)
+		{
+			temp[j] = a[i + j];
+		}
+		round(temp, key_final, tempm);
+		for (int j = 0; j < 8; j++)
+		{
+			m[index++] = tempm[j];
+		}
+	}
+	cout << "decoded: ";
+	for (int i = 0; i < sizeof(m); i++)
+	{
+		cout << hex << (int)m[i] << " ";
+	}
+	cout << endl;
+
+	return m;
 }
+
 
 //函数定义
 char* msg_to_string(msg_form a)//将报文格式转为字符串
@@ -55,7 +98,7 @@ msg_form string_to_msg(char a[])//将字符串恢复成类
 
 string initial_key()//server生成64位初始密钥
 {
-	string key="";
+	string key = "";
 	srand((int)time(0));
 	for (int i = 0; i < 8; i++)
 	{

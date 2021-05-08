@@ -26,7 +26,12 @@ char* msg_en(char* a, u_char key_final[16][6], char* cipher) {
 			cipher[index++] = tempcipher[j];
 		}
 	}
-
+	cout << "encoded: ";
+	for (int i = 0; i < sizeof(cipher); i++)
+	{
+		cout << hex << (int)cipher[i] << " ";
+	}
+	cout << endl;
 	return cipher;
 }
 char* msg_de(char* a, u_char key_final[16][6], char* m) {
@@ -50,6 +55,13 @@ char* msg_de(char* a, u_char key_final[16][6], char* m) {
 			m[index++] = tempm[j];
 		}
 	}
+	cout << "decoded: ";
+	for (int i = 0; i < sizeof(m); i++)
+	{
+		cout << hex << (int)m[i] << " ";
+	}
+	cout << endl;
+
 	return m;
 }
 
