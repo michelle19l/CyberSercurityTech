@@ -1,5 +1,5 @@
 #include "tcpfunction.h"
-#include<time.h>
+
 
 
 
@@ -26,12 +26,7 @@ char* msg_en(char* a, u_char key_final[16][6], char* cipher) {
 			cipher[index++] = tempcipher[j];
 		}
 	}
-	cout << "encoded: ";
-	for (int i = 0; i < sizeof(cipher); i++)
-	{
-		cout << hex << (int)cipher[i] << " ";
-	}
-	cout << endl;
+
 	return cipher;
 }
 char* msg_de(char* a, u_char key_final[16][6], char* m) {
@@ -41,7 +36,7 @@ char* msg_de(char* a, u_char key_final[16][6], char* m) {
 	u_char temp[8], tempm[8];
 	int index = 0;
 	memset(m, 0, BUF_SIZE);
-	for (int i = 0; i < BUF_SIZE; i += 8)
+	for (int i = 0; i < len; i += 8)
 	{
 		memset(temp, 0, sizeof(temp));
 		memset(tempm, 0, sizeof(tempm));
@@ -55,16 +50,8 @@ char* msg_de(char* a, u_char key_final[16][6], char* m) {
 			m[index++] = tempm[j];
 		}
 	}
-	cout << "decoded: ";
-	for (int i = 0; i < sizeof(m); i++)
-	{
-		cout << hex << (int)m[i] << " ";
-	}
-	cout << endl;
-
 	return m;
 }
-
 
 //函数定义
 char* msg_to_string(msg_form a)//将报文格式转为字符串
@@ -95,7 +82,6 @@ msg_form string_to_msg(char a[])//将字符串恢复成类
 
 	return msg_;
 }
-
 string initial_key()//server生成64位初始密钥
 {
 	string key = "";

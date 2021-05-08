@@ -112,6 +112,12 @@ int main()
 			cout << "n= "; n.print();
 			cout << "e= "; e.print();
 			string key_ = initial_key();
+			cout << "DES密钥:";
+			for (int i = 0; i < 8; i++)
+			{
+				cout << hex<<(int)key_[i] << " ";
+			}
+			cout << endl;
 			char key[16] = {};
 			for (int i = 0; i < 8; i++)
 			{
@@ -127,6 +133,7 @@ int main()
 			RSA_ secretkey(n, e);
 			rsa_en_text(mtext, ciphertext, secretkey);
 			send(sockClient, ciphertext, 512, 0);
+			//send(sockClient, mtext, 512, 0);
 
 			
 			//生成密钥

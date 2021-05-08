@@ -58,7 +58,7 @@ char* msg_en(char*, u_char[16][6], char*);
 char* msg_de(char*, u_char[16][6], char*);
 
 
-
+string initial_key();
 
 
 

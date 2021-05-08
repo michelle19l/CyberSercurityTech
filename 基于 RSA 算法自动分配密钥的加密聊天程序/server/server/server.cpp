@@ -91,7 +91,7 @@ int main()
 	prime q("a698494d2c26ca02ebf5284584c6224ab88e46bd27242f12dfec9cb577df385a3878a22d32aa06224e724f25ce93e06a96691b9d56d08f321733ff9500005d11");
 	//q.number.set(7);
 	cout << "q= "; q.number.print();
-	
+	cout << "开始生成密钥对" << endl;
 	RSA_ rsa(p.number, q.number, e);
 	cout << "n= "; rsa.n.print();
 	cout << "d= "; rsa.d.print();
@@ -129,6 +129,8 @@ int main()
 				{
 					char* mtext = new char[512];
 					rsa_de_text(mtext, buf_, rsa);
+					//for (int i = 0; i < 16; i++)
+					//	mtext[i] = buf_[i];
 					cout << "DES密钥为";
 					memset(deskey[i], 0, 8);
 					for (int j = 0; j < 8; j++)
@@ -145,6 +147,7 @@ int main()
 					break;
 				}
 			}
+			
 			cout << "clients " << i << " have connected" << endl;
 		}
 
@@ -182,18 +185,20 @@ DWORD WINAPI handlerRequest(LPVOID lparam)
 			cond = 1;
 		}*/
 
-		cout << recvBuf << endl;
+		//cout << recvBuf << endl;
 		msg_form m = string_to_msg(recvBuf);
 		int id = m.to_name - 48;
 		//cout << id << endl;
 		msg_form tmp;
-		char buf[BUF_SIZE];
+		char buf[BUF_SIZE] = {};
+
 		msg_de(m.msg, deskey_final[(int)lparam].key_final_, buf);
 		cout << buf << endl;
 		msg_en(buf, deskey_final[id].key_final, tmp.msg);
 		tmp.from_name = m.from_name;
 		tmp.to_name = m.to_name;
 		send(sockConn[id], (const char*)&tmp, 2048, 0);
+		//send(sockConn[id], recvBuf, 2048, 0);
 		if (!strcmp(m.msg, "quit"))
 		{
 			cout << "用户" << (int)lparam << "退出聊天" << endl;
