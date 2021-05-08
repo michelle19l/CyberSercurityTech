@@ -111,11 +111,16 @@ int main()
 			cout << "RSA公钥： ";
 			cout << "n= "; n.print();
 			cout << "e= "; e.print();
-			string key = initial_key();
-			
-			char mtext[8];
+			string key_ = initial_key();
+			char key[16] = {};
 			for (int i = 0; i < 8; i++)
-				mtext[i] = key.data()[i];
+			{
+				key[2*i] = key_[i] % 16;
+				key[2 * i + 1] = key_[i] / 16;
+			}
+			char mtext[512] = {};
+			for (int i = 0; i < 16; i++)
+				mtext[i] = key[i];
 			//strcpy_s(mtext,key.data());
 			char* ciphertext;
 			ciphertext = new char[512];
@@ -125,12 +130,12 @@ int main()
 
 			
 			//生成密钥
-			getkeys((u_char*)key.data(), key_final);
+			getkeys((u_char*)key_.data(), key_final);
 			for (int i = 0; i < 16; i++)
 				for (int j = 0; j < 6; j++)
 					key_final_[15 - i][j] = key_final[i][j];
-			for (int i = 0; i < 8; i++)
-				printf("%02X ", recvBuf[i]);
+			/*for (int i = 0; i < 8; i++)
+				printf("%02X ", recvBuf[i]);*/
 			cout << endl;
 			break;
 			Sleep(30);

@@ -21,6 +21,12 @@ DWORD dwThreadId, dwThreadId2;
 
 
 SOCKET* sockConn;//和两个client连接，可以改成多个
+u_char** deskey;//每个socket的deskey
+
+struct finalkey {
+	u_char key_final[16][6] = {};
+	u_char key_final_[16][6] = {};
+}*deskey_final;
 
 //server端状态码指的是当前在线人数
 int cond;
@@ -29,17 +35,17 @@ int CLIENTNUM = 2;
 int main()
 {
 
-
-	//msg_form a('8','j',"assd");
-	//cout << msg_to_string(a) << endl;
-	//int g = 0;
-
-
-
 	cout << "Server" << endl;
 	cout << "请输入聊天室人数：" << endl;
 	cin >> CLIENTNUM;
 	sockConn = new SOCKET[CLIENTNUM];
+	deskey = new unsigned char* [CLIENTNUM];
+	deskey_final = new finalkey [CLIENTNUM];
+	for (int i = 0; i < CLIENTNUM; i++)
+	{
+		deskey[i] = new unsigned char[8];
+	}
+	
 	//加载socket库
 	WSADATA wsaData;
 	//MAKEWORD(2.2),成功返回0
@@ -79,12 +85,16 @@ int main()
 	big e;
 	e.set(0x10001);
 	prime p("d0af256c8c72facbc0051054813505a340f899bcb05f4dfb83f2a9a4d14eabd312daa80c24bd772b37fe7cf4a39b8803c37a905cab66365b1721ca4400005a49");
+	//p.number.set(3);
 	cout << "p= "; p.number.print();
 	prime q("a698494d2c26ca02ebf5284584c6224ab88e46bd27242f12dfec9cb577df385a3878a22d32aa06224e724f25ce93e06a96691b9d56d08f321733ff9500005d11");
+	//q.number.set(7);
 	cout << "q= "; q.number.print();
 	
 	RSA_ rsa(p.number, q.number, e);
 	cout << "n= "; rsa.n.print();
+	cout << "d= "; rsa.d.print();
+	cout << "e= "; rsa.e.print();
 	cout << "密钥对已生成" << endl;
 	for (int i = 0; i < CLIENTNUM; i++)
 	{
@@ -108,6 +118,31 @@ int main()
 			e.numtostring(buf_);
 			send(sockConn[i], buf_, 512, 0);
 			
+			//接收加密后的密钥
+			memset(buf_, 0, sizeof(buf_));
+			while (1)
+			{
+				recv(sockConn[i], buf_, 1024, 0);
+				//对密钥进行解密
+				if (buf_[0])
+				{
+					char* mtext = new char[512];
+					rsa_de_text(mtext, buf_, rsa);
+					cout << "DES密钥为" << mtext << endl;
+					memset(deskey[i], 0, 8);
+					for (int j = 0; j < 8; j++)
+					{
+						deskey[i][j] += mtext[j * 2];
+						deskey[i][j] += mtext[j * 2 + 1] * 16;
+					}
+
+					getkeys((u_char*)deskey[i], deskey_final[i].key_final);
+					for (int k = 0; k < 16; k++)
+						for (int j = 0; j < 6; j++)
+							deskey_final[i].key_final_[15 - k][j] = deskey_final[i].key_final[k][j];
+					break;
+				}
+			}
 		}
 
 	}

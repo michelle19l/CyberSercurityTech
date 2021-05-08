@@ -82,8 +82,11 @@ unsigned int smallprime[5000];
 
 void big::numtostring(char* buf)
 {
+	memset(buf, 0, sizeof(buf));
 	for (int i = 0; i < 512; i++)
+	{
 		buf[i] = this->num[i];
+	}
 }
 
 
@@ -105,12 +108,16 @@ void big::copy(big a)
 void big::stringtonum(char* buf)
 {
 	for (int i = 0; i < 512; i++)
-		this->num[i] = (int)buf[i];
+	{
+		this->num[i] = buf[i];
+	}
 }
 big::big(char* text) {
-	memset(this->num, 0, 512);
+	memset(this->num, 0, sizeof(this->num));
 	for (int i = 0; i < 512; i++)
-		this->num[i] = (int)text[i];
+	{
+		this->num[i] = text[i];
+	}
 }
 
 big::big() {
@@ -729,8 +736,10 @@ void rsa_en_text(char* mtext, char* ciphertext, RSA_ en)
 {
 	big m(mtext);
 	RSAen_ a(en, m);
+	cout << "Ã÷ÎÄ£º"; m.print();
 	//ciphertext = new char[512];
 	a.c.numtostring(ciphertext);
+	cout << "ÃÜÎÄ£º"; a.c.print();
 }
 void rsa_de_text(char* mtext, char* ciphertext, RSA_ de)
 {
