@@ -74,7 +74,7 @@ public:
 	//big c, m;//密文和明文
 
 	RSA_(big p, big q, big e);
-
+	RSA_(big n, big e);
 };
 
 
@@ -87,6 +87,7 @@ class RSAen_//加密
 public:
 	big n, e;
 	big c, m;//密文和明文
+
 
 	RSAen_(RSA_ a, big m);
 
@@ -101,6 +102,8 @@ public:
 	RSAde_(RSA_ a, big c);
 };
 
+void rsa_en_text(char* m, char* cipher, RSA_ en);
+void rsa_de_text(char* m, char* cipher, RSA_ de);
 
 
 #endif // !1

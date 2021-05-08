@@ -107,7 +107,7 @@ void big::stringtonum(char* buf)
 	for (int i = 0; i < 512; i++)
 		this->num[i] = (int)buf[i];
 }
-big::big(char* text) {
+big::big(char * text) {
 	memset(this->num, 0, 512);
 	for (int i = 0; i < 512; i++)
 		this->num[i] = (int)text[i];
@@ -728,8 +728,8 @@ void big::set(string a, int x)//×Ö·û´®ÊäÈë
 void rsa_en_text(char* mtext, char* ciphertext, RSA_ en)
 {
 	big m(mtext);
-	RSAen_ a(en, m);
-	//ciphertext = new char[512];
+	RSAen_ a(en,m);
+	
 	a.c.numtostring(ciphertext);
 }
 void rsa_de_text(char* mtext, char* ciphertext, RSA_ de)

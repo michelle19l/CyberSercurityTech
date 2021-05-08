@@ -87,7 +87,7 @@ class RSAen_//加密
 public:
 	big n, e;
 	big c, m;//密文和明文
-
+	
 
 	RSAen_(RSA_ a, big m);
 

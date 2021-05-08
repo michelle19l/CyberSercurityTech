@@ -107,7 +107,11 @@ void big::stringtonum(char* buf)
 	for (int i = 0; i < 512; i++)
 		this->num[i] = (int)buf[i];
 }
-
+big::big(char* text) {
+	memset(this->num, 0, 512);
+	for (int i = 0; i < 512; i++)
+		this->num[i] = (int)text[i];
+}
 
 big::big() {
 	memset(this, 0, sizeof(big));
@@ -629,7 +633,11 @@ void prime::millerrabin()//检查是否是素数,512位！！！
 }
 
 
-
+RSA_::RSA_(big n, big e)
+{
+	this->n = n;
+	this->e = e;
+}
 
 RSA_::RSA_(big p, big q, big e)
 {
@@ -648,7 +656,6 @@ RSA_::RSA_(big p, big q, big e)
 	phi = mul(p1, q1);
 	d = getinv(phi, e);
 }
-
 
 RSAen_::RSAen_(RSA_ a, big m)
 {
@@ -718,4 +725,16 @@ void big::set(string a, int x)//字符串输入
 	}
 }
 
-
+void rsa_en_text(char* mtext, char* ciphertext, RSA_ en)
+{
+	big m(mtext);
+	RSAen_ a(en, m);
+	//ciphertext = new char[512];
+	a.c.numtostring(ciphertext);
+}
+void rsa_de_text(char* mtext, char* ciphertext, RSA_ de)
+{
+	big c(ciphertext);
+	RSAde_ a(de, c);
+	a.m.numtostring(mtext);
+}

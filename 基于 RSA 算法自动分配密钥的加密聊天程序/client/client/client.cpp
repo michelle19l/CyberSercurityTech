@@ -111,18 +111,19 @@ int main()
 			cout << "RSA公钥： ";
 			cout << "n= "; n.print();
 			cout << "e= "; e.print();
-			string key;
-			if (ID == 0)
-			{
-				key = initial_key();
-				send(sockClient, key.data(), 50, 0);
-			}
-			else
-			{
-				memset(recvBuf, 0, sizeof(recvBuf));
-				recv(sockClient, recvBuf, 50, 0);
-				key = recvBuf;
-			}
+			string key = initial_key();
+			
+			char mtext[8];
+			for (int i = 0; i < 8; i++)
+				mtext[i] = key.data()[i];
+			//strcpy_s(mtext,key.data());
+			char* ciphertext;
+			ciphertext = new char[512];
+			RSA_ secretkey(n, e);
+			rsa_en_text(mtext, ciphertext, secretkey);
+			send(sockClient, ciphertext, 512, 0);
+
+			
 			//生成密钥
 			getkeys((u_char*)key.data(), key_final);
 			for (int i = 0; i < 16; i++)
