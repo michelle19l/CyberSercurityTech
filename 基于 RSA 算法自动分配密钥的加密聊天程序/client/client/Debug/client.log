@@ -1,0 +1,5 @@
+﻿  client.cpp
+E:\study\大三下\网络安全技术\作业\基于 RSA 算法自动分配密钥的加密聊天程序\client\client\deshead.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+E:\study\大三下\网络安全技术\作业\基于 RSA 算法自动分配密钥的加密聊天程序\client\client\RSA.h(13,1): warning C4005: 'INT_MAX': macro redefinition
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\limits.h(36): message : see previous definition of 'INT_MAX'
+  client.vcxproj -> E:\study\大三下\网络安全技术\作业\基于 RSA 算法自动分配密钥的加密聊天程序\client\Debug\client.exe

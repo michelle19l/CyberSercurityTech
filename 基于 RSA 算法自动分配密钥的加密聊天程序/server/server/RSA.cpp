@@ -521,8 +521,12 @@ int big::getbit(int i)
 
 
 
-
 prime::prime()
+{
+	number.set(0);
+}
+
+void prime::getprime()
 {
 	memset(this, 0, sizeof(prime));
 	getarbitrary();//生成512bit随机数，奇数
@@ -531,6 +535,10 @@ prime::prime()
 	millerrabin();//检查是否是素数
 }
 
+void prime::set(string a)
+{
+	number.set(a);
+}
 
 
 void prime::check2000()//检查是否能被2000以内的素数整除,若不能则加2，直至可以
@@ -744,6 +752,8 @@ void rsa_en_text(char* mtext, char* ciphertext, RSA_ en)
 void rsa_de_text(char* mtext, char* ciphertext, RSA_ de)
 {
 	big c(ciphertext);
+	cout << "密文："; c.print();
 	RSAde_ a(de, c);
 	a.m.numtostring(mtext);
+	cout << "明文: "; a.m.print();
 }

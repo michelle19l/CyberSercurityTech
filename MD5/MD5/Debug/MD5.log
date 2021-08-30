@@ -1,0 +1,6 @@
+﻿  MD5.cpp
+E:\study\大三下\网络安全技术\作业\MD5\MD5\MD5.cpp(407,19): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+E:\study\大三下\网络安全技术\作业\MD5\MD5\MD5.cpp(443,19): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+E:\study\大三下\网络安全技术\作业\MD5\MD5\MD5.cpp(481,19): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+E:\study\大三下\网络安全技术\作业\MD5\MD5\MD5.cpp(519,19): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+  MD5.vcxproj -> E:\study\大三下\网络安全技术\作业\MD5\Debug\MD5.exe

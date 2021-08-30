@@ -56,8 +56,10 @@ class prime {
 public:
 	big number;
 	prime();
+	void getprime();
 	prime(string a);
 	prime(string a, int x);
+	void set(string a);
 	void getarbitrary();//生成512bit随机数，奇数
 	void check2000();//检查是否能被2000以内的素数整除,若不能则加2，直至可以
 	void millerrabin();//检查是否是素数
@@ -87,7 +89,7 @@ class RSAen_//加密
 public:
 	big n, e;
 	big c, m;//密文和明文
-
+	
 
 	RSAen_(RSA_ a, big m);
 

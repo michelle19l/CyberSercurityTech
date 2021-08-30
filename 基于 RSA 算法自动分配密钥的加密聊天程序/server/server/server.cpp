@@ -84,11 +84,24 @@ int main()
 	cout << "开始生成密钥" << endl;
 	big e;
 	e.set(0x10001);
+	cout << "tips 本程序将生成512bit的p和q，生成和计算时间较长" << endl;
 	//e.set(5);
-	prime p("d0af256c8c72facbc0051054813505a340f899bcb05f4dfb83f2a9a4d14eabd312daa80c24bd772b37fe7cf4a39b8803c37a905cab66365b1721ca4400005a49");
+	cout << "是否使用默认密钥对？1是 2否" << endl;
+	int flag;
+	cin >> flag;
+	prime p, q;
+	if (flag == 1)
+	{
+		p.set("d0af256c8c72facbc0051054813505a340f899bcb05f4dfb83f2a9a4d14eabd312daa80c24bd772b37fe7cf4a39b8803c37a905cab66365b1721ca4400005a49");
+		q.set("a698494d2c26ca02ebf5284584c6224ab88e46bd27242f12dfec9cb577df385a3878a22d32aa06224e724f25ce93e06a96691b9d56d08f321733ff9500005d11");
+	}
+	else if(flag==2)
+	{
+		p.getprime();
+		q.getprime();
+	}
 	//p.number.set(3);
 	cout << "p= "; p.number.print();
-	prime q("a698494d2c26ca02ebf5284584c6224ab88e46bd27242f12dfec9cb577df385a3878a22d32aa06224e724f25ce93e06a96691b9d56d08f321733ff9500005d11");
 	//q.number.set(7);
 	cout << "q= "; q.number.print();
 	cout << "开始生成密钥对" << endl;

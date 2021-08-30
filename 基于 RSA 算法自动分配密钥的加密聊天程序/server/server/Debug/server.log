@@ -1,0 +1,6 @@
+﻿  RSA.cpp
+E:\study\大三下\网络安全技术\作业\基于 RSA 算法自动分配密钥的加密聊天程序\server\server\RSA.h(13,1): warning C4005: 'INT_MAX': macro redefinition
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\limits.h(36): message : see previous definition of 'INT_MAX'
+E:\study\大三下\网络安全技术\作业\基于 RSA 算法自动分配密钥的加密聊天程序\server\server\RSA.cpp(477,6): warning C4101: 'i': unreferenced local variable
+E:\study\大三下\网络安全技术\作业\基于 RSA 算法自动分配密钥的加密聊天程序\server\server\RSA.cpp(721): warning C4715: 'change': not all control paths return a value
+  server.vcxproj -> E:\study\大三下\网络安全技术\作业\基于 RSA 算法自动分配密钥的加密聊天程序\server\Debug\server.exe

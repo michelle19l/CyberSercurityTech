@@ -1,0 +1,8 @@
+﻿  server.cpp
+E:\study\大三下\网络安全技术\作业\基于des加密的tcp聊天\server\server\deshead.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+  tcpfunction.cpp
+E:\study\大三下\网络安全技术\作业\基于des加密的tcp聊天\server\server\deshead.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+  Generating Code...
+E:\study\大三下\网络安全技术\作业\基于des加密的tcp聊天\server\server\tcpfunction.cpp(12): warning C4172: returning address of local variable or temporary: cipher
+E:\study\大三下\网络安全技术\作业\基于des加密的tcp聊天\server\server\tcpfunction.cpp(23): warning C4172: returning address of local variable or temporary: m
+  server.vcxproj -> E:\study\大三下\网络安全技术\作业\基于des加密的tcp聊天\server\Debug\server.exe
